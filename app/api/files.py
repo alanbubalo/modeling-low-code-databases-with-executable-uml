@@ -4,6 +4,7 @@ from flask import jsonify, request, send_from_directory
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.api import api
 from app import upload_dir
+import app.xmi_reader as xr
 # import app.api.error
 
 UPLOAD_DIR = upload_dir['path']
@@ -78,3 +79,26 @@ def delete_file(filename):
         return jsonify(msg="Could not find file"), 404
     os.remove(path)
     return "", 204
+
+
+@api.get('/xmi_read/files/<filename>')
+@jwt_required()
+def read_xmi_file(filename):
+    """Get Database attributes"""
+    path_to_filename = f"{UPLOAD_DIR}/user-{get_jwt_identity()}"
+    path = os.path.join(path_to_filename, filename)
+    if not os.path.isfile(path):
+        return jsonify(msg="Could not find file"), 404
+    packaged_elements = xr.get_packaged_elements(get_jwt_identity(), filename)
+    data = {}
+    data['classes'] = xr.get_classes(packaged_elements)
+    data['data_types'] = xr.get_data_types(packaged_elements)
+    data['enumerations'] = xr.get_enumerations(packaged_elements)
+    data['associations'] = xr.get_associations(data['classes'])
+    data['attributes'] = xr.get_attributes(
+        data['classes'],
+        data['data_types'],
+        data['enumerations'])
+
+    data['classes'] = list(data['classes'])
+    return jsonify(data=data), 200

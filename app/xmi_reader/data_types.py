@@ -16,7 +16,7 @@ def get_enumerations(packaged_elements: NodeList[Element]) -> list[dict]:
         {'id': 'AAAAAAGD1hiG1uaORTo=', 'name': 'Gender', 'literals': {'Male', 'Female'}}
 
     Args:
-        packaged_elements: Elements from `<uml:Model` with a tag
+        packaged_elements: Elements from `<uml:Model>` with a tag
             `<packagedElement>`
 
     Returns:
@@ -48,8 +48,8 @@ def get_data_types(packaged_elements: NodeList[Element]) -> list[dict]:
         {'id': 'AAAAAAGD1hiG1uaORTo=', 'name': 'Integer'}
 
     Args:
-        packaged_elements: Elements from `<uml:Mode'> with a tag
-            '<packagedElement>`
+        packaged_elements: Elements from `<uml:Model>` with a tag
+            `<packagedElement>`
 
     Returns:
         A list of all data types used in a model

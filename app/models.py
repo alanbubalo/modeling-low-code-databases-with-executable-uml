@@ -8,14 +8,14 @@ from app import db, bcrypt
 class User(db.Model, SerializerMixin):
     """User from the database"""
     __tablename__ = 'user'
-    serialize_only = ('id', 'name', 'email', 'date_added', 'model.id')
+    serialize_only = ('id', 'name', 'email', 'date_added')
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(256), nullable=False)
     email = db.Column(db.String(256), nullable=False, unique=True)
     _password = db.Column(db.String(256), nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    model = db.relationship('UMLModel', backref='user', lazy=True)
+    uml_model = db.relationship('UMLModel', backref='user', lazy=True)
 
     def __repr__(self) -> str:
         return f"<User {self.email}>"
@@ -45,7 +45,7 @@ class UMLModel(db.Model, SerializerMixin):
     baserow_token = db.Column(db.String(256), nullable=False)
     filename = db.Column(db.String(256), nullable=False)
     group_id = db.Column(db.Integer, nullable=False)
-    database_id = db.Column(db.Integer, nullable=False)
+    database_id = db.Column(db.Integer, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self) -> str:
@@ -69,11 +69,11 @@ class IDPair(db.Model, SerializerMixin):
 # class Log(db.Model, SerializerMixin):
 #     """Log records of actions"""
 #     __tablename__ = 'log'
-#     serialize_only = ('id', 'user_id', 'model_id', 'action', 'datetime')
+#     serialize_only = ('id', 'user_id', 'uml_model', 'action', 'datetime')
 
 #     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 #     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-#     model_id = db.Column(db.Integer, db.ForeignKey('uml_model.id'))
+#     uml_model = db.Column(db.Integer, db.ForeignKey('uml_model.id'))
 #     pair_id = db.Column(db.Integer, db.ForeignKey('id_pair.id'))
 #     action = db.Column(db.String(64), nullable=False)
 #     datetime = db.Column(db.DateTime, default=datetime.utcnow)

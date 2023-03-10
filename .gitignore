@@ -124,8 +124,6 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-tst.json
-test_baserow.py
-test_idk.py
 data-dev.sqlite
 files/
+test_baserow.py

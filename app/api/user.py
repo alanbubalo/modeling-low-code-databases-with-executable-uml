@@ -47,14 +47,15 @@ def post_user():
         db.session.commit()
         access_token = create_access_token(identity=new_user.id)
         refresh_token = create_refresh_token(identity=new_user.id)
-        return jsonify(data={
-            "user": new_user.to_dict(),
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-        }), 201
     except IntegrityError:
         db.session.rollback()
-    return jsonify(msg="Integrity error"), 400
+        return jsonify(msg="Integrity error"), 400
+
+    return jsonify(data={
+        "user": new_user.to_dict(),
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+    }), 201
 
 
 # @api.get('/users/<int:user_id>')
